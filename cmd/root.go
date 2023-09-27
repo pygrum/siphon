@@ -97,11 +97,10 @@ func versionString() string {
 }
 
 func cfgBoilerplate() []byte {
-	return []byte(`RefreshRate: 5 # Refresh sample list every 5 minutes
+	return []byte(`refreshrate: 5 # Refresh sample list every 5 minutes
 Sources:
 - name: MalwareBazaar
-  endpoint:
-  APIKey:
-	)
-}`)
+  endpoint: null
+  apikey: null
+`)
 }
