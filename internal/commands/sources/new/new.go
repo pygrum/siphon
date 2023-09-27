@@ -16,8 +16,8 @@ func NewCmd(name, apikey, endpoint string) {
 		return
 	}
 	var update bool
-	for _, src := range srcs {
-		if src.Name == name {
+	for i, src := range srcs {
+		if strings.ToLower(src.Name) == name {
 			update = true
 			if len(endpoint) != 0 {
 				src.Endpoint = endpoint
@@ -25,6 +25,7 @@ func NewCmd(name, apikey, endpoint string) {
 			if len(apikey) != 0 {
 				src.ApiKey = apikey
 			}
+			srcs[i] = src
 			break
 		}
 	}
