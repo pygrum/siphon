@@ -8,6 +8,7 @@ import (
 	"github.com/pygrum/siphon/internal/siphon"
 	"io"
 	"strconv"
+	"strings"
 )
 
 func GetCmd(id, out string, persist bool) {
@@ -22,7 +23,7 @@ func GetCmd(id, out string, persist bool) {
 		logger.Errorf("sample '%s': not found", id)
 		return
 	}
-	if spl.Source == "MalwareBazaar" {
+	if strings.ToLower(spl.Source) == malwarebazaar.Source {
 		fileBytes := getFromMB(spl)
 		if fileBytes != nil {
 			if len(out) == 0 {
