@@ -10,7 +10,11 @@ import (
 	"strings"
 )
 
-func SamplesCmd(sampleCount string) {
+const (
+	truncLimit = 40
+)
+
+func SamplesCmd(sampleCount string, noTrunc bool) {
 	sc := 0
 	i, err := strconv.Atoi(sampleCount)
 	if err != nil {
@@ -33,12 +37,12 @@ func SamplesCmd(sampleCount string) {
 		if len(samples) == 0 {
 			logger.Info("no samples loaded - check your internet connection or API configuration")
 		} else {
-			RenderTable(samples)
+			RenderTable(samples, noTrunc)
 		}
 	}
 }
 
-func RenderTable(samples []models.Sample) {
+func RenderTable(samples []models.Sample, v bool) {
 	t := table.NewWriter()
 	tmp := table.Table{}
 	tmp.Render()
@@ -47,9 +51,16 @@ func RenderTable(samples []models.Sample) {
 
 	header := table.Row{"ID", "NAME", "TYPE", "SIGNATURE", "HASH", "SIZE", "SOURCE", "UPLOADED AT"}
 	for _, s := range samples {
+		name := s.Name
+		if !v {
+			if len(s.Name) > truncLimit {
+				name = s.Name[:truncLimit]
+				name += "..."
+			}
+		}
 		row := table.Row{
 			s.ID,
-			s.Name,
+			name,
 			s.FileType,
 			s.Signature,
 			s.Hash,

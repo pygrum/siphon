@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func InfoCmd(ids ...string) {
+func InfoCmd(noTrunc bool, ids ...string) {
 	var sampleList []models.Sample
 	for _, id := range ids {
 		uid, err := strconv.Atoi(id)
@@ -25,7 +25,7 @@ func InfoCmd(ids ...string) {
 		sampleList = append(sampleList, *spl)
 	}
 	sampleList = clean(sampleList)
-	samples.RenderTable(sampleList)
+	samples.RenderTable(sampleList, noTrunc)
 }
 
 func clean(spls []models.Sample) []models.Sample {

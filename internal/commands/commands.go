@@ -37,14 +37,16 @@ func Commands() *cobra.Command {
 	sourcesCmd.AddCommand(newCmd)
 
 	var sampleCount string
+	var sampleNoTruncate bool
 	samplesCmd := &cobra.Command{
 		Use:   "samples",
 		Short: "List the latest samples found by Siphon - default 5",
 		Run: func(cmd *cobra.Command, args []string) {
-			samples.SamplesCmd(sampleCount)
+			samples.SamplesCmd(sampleCount, sampleNoTruncate)
 		},
 	}
-	samplesCmd.Flags().StringVarP(&sampleCount, "count", "c", "5", "number of samples to retrieve")
+	samplesCmd.Flags().StringVarP(&sampleCount, "count", "c", "5", "number of samples to retrieve (use 'all' to retrieve all samples)")
+	samplesCmd.Flags().BoolVarP(&sampleNoTruncate, "no-truncate", "v", false, "don't truncate sample names")
 
 	var getOut string
 	var getPersist bool
@@ -60,14 +62,16 @@ func Commands() *cobra.Command {
 	getCmd.Flags().BoolVarP(&getPersist, "persist", "p", false, "save the sample to a permanent location")
 	_ = cobra.MarkFlagRequired(getCmd.Flags(), "id")
 
+	var infoNoTruncate bool
 	infoCmd := &cobra.Command{
 		Use:   "info [id...]",
 		Short: "Get information about 1 or more samples (querying by name or id)",
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			info.InfoCmd(args...)
+			info.InfoCmd(infoNoTruncate, args...)
 		},
 	}
+	infoCmd.Flags().BoolVarP(&infoNoTruncate, "no-truncate", "v", false, "don't truncate sample names")
 
 	exitCmd := &cobra.Command{
 		Use:   "exit",
