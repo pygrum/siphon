@@ -5,9 +5,11 @@ import (
 	"github.com/pygrum/siphon/internal/logger"
 	"github.com/spf13/viper"
 	"slices"
+	"strings"
 )
 
 func NewCmd(name, apikey, endpoint string) {
+	name = strings.ToLower(name)
 	srcs := sources.Sources()
 	if !slices.Contains(sources.SupportedSources, name) {
 		logger.Errorf("'%s' integration is not supported", name)
