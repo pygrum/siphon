@@ -6,6 +6,7 @@ import (
 	"github.com/pygrum/siphon/internal/commands/info"
 	"github.com/pygrum/siphon/internal/commands/samples"
 	"github.com/pygrum/siphon/internal/commands/sources"
+	"github.com/pygrum/siphon/internal/commands/sources/new"
 	"github.com/spf13/cobra"
 )
 
@@ -19,6 +20,21 @@ func Commands() *cobra.Command {
 			sources.SourcesCmd()
 		},
 	}
+
+	var newName, newApiKey, newEndpoint string
+	newCmd := &cobra.Command{
+		Use:   "new",
+		Short: "configure a new integration",
+		Run: func(cmd *cobra.Command, args []string) {
+			new.NewCmd(newName, newApiKey, newEndpoint)
+		},
+	}
+	newCmd.Flags().StringVarP(&newName, "name", "n", "", "name of new source")
+	newCmd.Flags().StringVarP(&newApiKey, "api-key", "k", "", "api key for source")
+	newCmd.Flags().StringVarP(&newEndpoint, "endpoint", "e", "", "source API endpoint")
+	_ = cobra.MarkFlagRequired(newCmd.Flags(), "name")
+
+	sourcesCmd.AddCommand(newCmd)
 
 	var sampleCount string
 	samplesCmd := &cobra.Command{

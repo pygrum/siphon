@@ -29,8 +29,12 @@ page, or run the application in a Docker container
 |---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | MalwareBazaar | MalwareBazaar integration is used to fetch the latest samples seen in the wild. Create an account at https://bazaar.abuse.ch/ and retrieve api key from your account settings. |
 
-For each integration, add an entry into your configuration file. It should look something like
-this:
+For each integration, add an entry into your configuration file using the
+`sources new` command. It should look something like this:
+
+```shell
+sources new --name MalwareBazaar --api-key <your-api-key> --endpoint https://mb-api.abuse.ch/api/v1/
+```
 
 ```yaml
 refreshrate: 1

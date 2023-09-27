@@ -4,14 +4,15 @@ import (
 	"github.com/pygrum/siphon/internal/logger"
 	"github.com/spf13/viper"
 	"slices"
+	"strings"
 )
 
 var (
-	supportedSources = []string{
-		//"VirusTotal",
-		"MalwareBazaar",
-		//"HybridAnalysis",
-		//"VirusShare",
+	SupportedSources = []string{
+		//"virustotal",
+		"malwarebazaar",
+		//"hybridanalysis",
+		//"virusshare",
 	}
 )
 
@@ -19,6 +20,12 @@ type Source struct {
 	Name     string `yaml:"name"`
 	Endpoint string `yaml:"endpoint"`
 	ApiKey   string `yaml:"apikey"`
+}
+
+func Sources() []Source {
+	var sources []Source
+	_ = viper.UnmarshalKey("sources", &sources)
+	return sources
 }
 
 func FindSource(sourceName string) *Source {
@@ -46,8 +53,8 @@ func SourcesCmd() {
 		return
 	}
 	for _, s := range sources {
-		if !slices.Contains(supportedSources, s.Name) {
-			logger.Errorf("%s is not a supported source", s.Name)
+		if !slices.Contains(SupportedSources, strings.ToLower(s.Name)) {
+			logger.Errorf("'%s' is not a supported integration", s.Name)
 			continue
 		}
 		if len(s.ApiKey) == 0 {
