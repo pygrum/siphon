@@ -46,18 +46,17 @@ func Commands() *cobra.Command {
 	}
 	samplesCmd.Flags().StringVarP(&sampleCount, "count", "c", "5", "number of samples to retrieve")
 
-	var getID string
 	var getOut string
 	var getPersist bool
 	getCmd := &cobra.Command{
-		Use:   "get",
+		Use:   "get [id|name]",
 		Short: "Download an indexed sample from its original source",
+		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			get.GetCmd(getID, getOut, getPersist)
+			get.GetCmd(args[0], getOut, getPersist)
 		},
 	}
-	getCmd.Flags().StringVarP(&getID, "id", "", "", "the id or name of the sample to download")
-	getCmd.Flags().StringVarP(&getID, "outfile", "o", "", "the save name of the sample")
+	getCmd.Flags().StringVarP(&getOut, "outfile", "o", "", "the save name of the sample")
 	getCmd.Flags().BoolVarP(&getPersist, "persist", "p", false, "save the sample to a permanent location")
 	_ = cobra.MarkFlagRequired(getCmd.Flags(), "id")
 

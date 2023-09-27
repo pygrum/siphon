@@ -27,6 +27,8 @@ func GetCmd(id, out string, persist bool) {
 		if fileBytes != nil {
 			if len(out) == 0 {
 				out = spl.Hash + "." + spl.FileType + ".zip" // MalwareBazaar returns as zip
+			} else {
+				out += ".zip"
 			}
 			f, err := siphon.AddFile(out, fileBytes, 0700, persist)
 			if err != nil {
