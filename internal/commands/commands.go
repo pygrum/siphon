@@ -3,6 +3,7 @@ package commands
 import (
 	"github.com/pygrum/siphon/internal/commands/exit"
 	"github.com/pygrum/siphon/internal/commands/get"
+	"github.com/pygrum/siphon/internal/commands/info"
 	"github.com/pygrum/siphon/internal/commands/samples"
 	"github.com/pygrum/siphon/internal/commands/sources"
 	"github.com/spf13/cobra"
@@ -41,9 +42,17 @@ func Commands() *cobra.Command {
 	}
 	getCmd.Flags().StringVarP(&getID, "id", "", "", "the id or name of the sample to download")
 	getCmd.Flags().StringVarP(&getID, "outfile", "o", "", "the save name of the sample")
-
 	getCmd.Flags().BoolVarP(&getPersist, "persist", "p", false, "save the sample to a permanent location")
 	_ = cobra.MarkFlagRequired(getCmd.Flags(), "id")
+
+	infoCmd := &cobra.Command{
+		Use:   "info [id...]",
+		Short: "Get information about 1 or more samples (querying by name or id)",
+		Args:  cobra.MinimumNArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			info.InfoCmd(args...)
+		},
+	}
 
 	exitCmd := &cobra.Command{
 		Use:   "exit",
@@ -54,6 +63,7 @@ func Commands() *cobra.Command {
 		},
 	}
 
+	cmd.AddCommand(infoCmd)
 	cmd.AddCommand(getCmd)
 	cmd.AddCommand(sourcesCmd)
 	cmd.AddCommand(samplesCmd)
