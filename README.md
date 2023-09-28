@@ -12,7 +12,7 @@ sorted by time, and download them from their source.
 
 ## Installation
 
-You can either download Siphon from the [releases](https://github.com/pygurm/siphon/releases/latest)
+You can either download Siphon from the [releases](https://github.com/pygrum/siphon/releases/latest)
 page, or run the application in a Docker container
 
 ### Using docker
