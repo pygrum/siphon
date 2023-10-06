@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/pygrum/siphon/internal/db"
-	"github.com/pygrum/siphon/internal/db/models"
 	"github.com/pygrum/siphon/internal/logger"
 	"strconv"
 	"strings"
@@ -14,12 +13,18 @@ const (
 	truncLimit = 40
 )
 
+var conn *db.Conn
+
+func init() {
+	conn = db.Initialize()
+}
+
 func SamplesCmd(sampleCount string, noTrunc bool) {
 	sc := 0
 	i, err := strconv.Atoi(sampleCount)
 	if err != nil {
 		if strings.ToLower(sampleCount) == "all" {
-			sc = db.Count()
+			sc = conn.Count()
 		} else {
 			logger.Errorf("valid integer argument required")
 			return
@@ -33,7 +38,7 @@ func SamplesCmd(sampleCount string, noTrunc bool) {
 	}
 	// Do nothing if zero sample count
 	if sc > 0 {
-		samples := db.Samples(sc)
+		samples := conn.Samples(sc)
 		if len(samples) == 0 {
 			logger.Info("no samples loaded - check your internet connection or API configuration")
 		} else {
@@ -42,7 +47,7 @@ func SamplesCmd(sampleCount string, noTrunc bool) {
 	}
 }
 
-func RenderTable(samples []models.Sample, v bool) {
+func RenderTable(samples []db.Sample, v bool) {
 	t := table.NewWriter()
 	tmp := table.Table{}
 	tmp.Render()

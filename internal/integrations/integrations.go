@@ -1,6 +1,7 @@
 package integrations
 
 import (
+	"github.com/pygrum/siphon/internal/integrations/agent"
 	"github.com/pygrum/siphon/internal/integrations/malwarebazaar"
 	"github.com/pygrum/siphon/internal/logger"
 	"github.com/spf13/viper"
@@ -13,8 +14,12 @@ func Refresh() {
 		logger.Silentf("invalid configuration: refresh rate must be 1 minute or more")
 	}
 	ticker := time.NewTicker(time.Duration(r) * time.Minute)
+	mbFetcher := malwarebazaar.NewFetcher()
+	agFetcher := agent.NewFetcher()
 	for range ticker.C {
-		mbFetcher := malwarebazaar.NewFetcher()
-		go mbFetcher.GetRecent()
+		if mbFetcher != nil {
+			go mbFetcher.GetRecent()
+		}
+		go agFetcher.GetRecent()
 	}
 }

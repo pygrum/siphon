@@ -35,7 +35,7 @@ func FindSource(sourceName string) *Source {
 		return nil
 	}
 	for _, s := range sources {
-		if s.Name == sourceName {
+		if strings.ToLower(s.Name) == strings.ToLower(sourceName) {
 			return &s
 		}
 	}

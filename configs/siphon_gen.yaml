@@ -1,0 +1,10 @@
+# Example configuration file for Siphon's agent generator
+
+cert_file: "/path/to/siphon/client/certificate"
+src_path: "/path/to/siphon/agent/source/file" # This would be ${SRC}/cmd/agent/siphon_agent.go
+name: "agent"
+os: "windows"
+arch: "amd64"
+host: "0.0.0.0"
+port: "8080"
+outfile: "agent.exe"

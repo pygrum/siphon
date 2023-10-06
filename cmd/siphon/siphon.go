@@ -1,4 +1,4 @@
-package cmd
+package main
 
 import (
 	"errors"
@@ -6,17 +6,12 @@ import (
 	"github.com/pygrum/siphon/internal/console"
 	"github.com/pygrum/siphon/internal/db"
 	"github.com/pygrum/siphon/internal/logger"
+	"github.com/pygrum/siphon/internal/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"os"
 	"path/filepath"
 	"strings"
-)
-
-const (
-	VersionMajor = "1"
-	VersionMinor = "0"
-	VersionPatch = "0"
 )
 
 var (
@@ -33,7 +28,7 @@ var (
 			fmt.Println(strings.ReplaceAll(
 				title(),
 				"{VER}",
-				versionString()))
+				version.VersionString()))
 			console.Start()
 		},
 	}
@@ -56,7 +51,6 @@ func initCfg() {
 		if !errors.Is(err, os.ErrExist) {
 			cobra.CheckErr(err)
 		}
-		logger.Infof("creating new configuration file at %s", filepath.Join(cfgDir, ".siphon.yaml"))
 		if _, err := os.Stat(filepath.Join(cfgDir, ".siphon.yaml")); os.IsNotExist(err) {
 			err = os.WriteFile(filepath.Join(cfgDir, ".siphon.yaml"), cfgBoilerplate(), 0666)
 			cobra.CheckErr(err)
@@ -68,7 +62,7 @@ func initCfg() {
 	}
 
 	if err := viper.ReadInConfig(); err != nil {
-		logger.Errorf("reading configuration file ($HOME/.siphon.yaml) failed: %v", err)
+		logger.Errorf("reading configuration file failed: %v", err)
 	}
 	db.Initialize()
 }
@@ -88,12 +82,10 @@ func title() string {
 `
 }
 
-func Execute() error {
-	return rootCmd.Execute()
-}
-
-func versionString() string {
-	return "v" + strings.Join([]string{VersionMajor, VersionMinor, VersionPatch}, ".")
+func main() {
+	if err := rootCmd.Execute(); err != nil {
+		logger.Fatal(err)
+	}
 }
 
 func cfgBoilerplate() []byte {

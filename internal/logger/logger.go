@@ -20,8 +20,29 @@ const (
 	White  = "\033[97m"
 )
 
+type Logger struct {
+	LogFile *os.File
+}
+
+func NewLogger(path string) (*Logger, error) {
+	f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	return &Logger{LogFile: f}, nil
+}
+
+func (l *Logger) Write(s string) {
+	_, _ = l.LogFile.WriteString(time.Now().Format(time.DateTime) + " " + s + "\n")
+}
+
 func Infof(format string, v ...interface{}) {
 	fmt.Printf(Blue+"[-] "+format+"\n"+Reset, v...)
+}
+
+func Sinfof(format string, v ...interface{}) string {
+	return fmt.Sprintf(Blue+"[-] "+format+"\n"+Reset, v...)
 }
 
 func Info(v interface{}) {
@@ -60,6 +81,10 @@ func Error(v interface{}) {
 
 func Errorf(format string, v ...interface{}) {
 	fmt.Printf(Red+"[!] "+format+"\n"+Reset, v...)
+}
+
+func Serrorf(format string, v ...interface{}) string {
+	return fmt.Sprintf(Red+"[!] "+format+"\n"+Reset, v...)
 }
 
 func Silentf(format string, v ...interface{}) {

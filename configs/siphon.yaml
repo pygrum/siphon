@@ -1,0 +1,9 @@
+# Example configuration file for Siphon
+
+refreshrate: 5 # Refresh sample list every 5 minutes
+cert_file: "/path/to/cert/file.crt"
+key_file: "/path/to/key/file.crt"
+sources:
+- name: "malwarebazaar"
+  endpoint:
+  apikey:

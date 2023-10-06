@@ -1,6 +1,8 @@
 package commands
 
 import (
+	"github.com/pygrum/siphon/internal/commands/agents"
+	"github.com/pygrum/siphon/internal/commands/agents/set"
 	"github.com/pygrum/siphon/internal/commands/exit"
 	"github.com/pygrum/siphon/internal/commands/get"
 	"github.com/pygrum/siphon/internal/commands/info"
@@ -33,7 +35,6 @@ func Commands() *cobra.Command {
 	newCmd.Flags().StringVarP(&newApiKey, "api-key", "k", "", "api key for source")
 	newCmd.Flags().StringVarP(&newEndpoint, "endpoint", "e", "", "source API endpoint")
 	_ = cobra.MarkFlagRequired(newCmd.Flags(), "name")
-
 	sourcesCmd.AddCommand(newCmd)
 
 	var sampleCount string
@@ -82,9 +83,32 @@ func Commands() *cobra.Command {
 		},
 	}
 
+	agentsCmd := &cobra.Command{
+		Use:   "agents",
+		Short: "View known agents",
+		Args:  cobra.NoArgs,
+		Run: func(cmd *cobra.Command, args []string) {
+			agents.AgentsCmd()
+		},
+	}
+
+	var endpoint, certFile string
+	setCmd := &cobra.Command{
+		Use:   "set [id]",
+		Short: "Configure agent integration parameters",
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			set.SetCmd(args[0], endpoint, certFile)
+		},
+	}
+	setCmd.Flags().StringVarP(&endpoint, "endpoint", "e", "", "API endpoint for the agent")
+	setCmd.Flags().StringVarP(&certFile, "cert-file", "c", "", "path to agent certificate file")
+	agentsCmd.AddCommand(setCmd)
+
 	cmd.AddCommand(infoCmd)
 	cmd.AddCommand(getCmd)
 	cmd.AddCommand(sourcesCmd)
+	cmd.AddCommand(agentsCmd)
 	cmd.AddCommand(samplesCmd)
 	cmd.AddCommand(exitCmd)
 

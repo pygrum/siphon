@@ -3,20 +3,25 @@ package info
 import (
 	"github.com/pygrum/siphon/internal/commands/samples"
 	"github.com/pygrum/siphon/internal/db"
-	"github.com/pygrum/siphon/internal/db/models"
 	"github.com/pygrum/siphon/internal/logger"
 	"strconv"
 )
 
+var conn *db.Conn
+
+func init() {
+	conn = db.Initialize()
+}
+
 func InfoCmd(noTrunc bool, ids ...string) {
-	var sampleList []models.Sample
+	var sampleList []db.Sample
 	for _, id := range ids {
 		uid, err := strconv.Atoi(id)
-		spl := &models.Sample{}
+		spl := &db.Sample{}
 		if err != nil {
-			spl = db.SampleByName(id)
+			spl = conn.SampleByName(id)
 		} else {
-			spl = db.SampleByID(uint(uid))
+			spl = conn.SampleByID(uint(uid))
 		}
 		if spl == nil {
 			logger.Errorf("sample '%s': not found", id)
@@ -28,12 +33,12 @@ func InfoCmd(noTrunc bool, ids ...string) {
 	samples.RenderTable(sampleList, noTrunc)
 }
 
-func clean(spls []models.Sample) []models.Sample {
-	m := make(map[uint]models.Sample)
+func clean(spls []db.Sample) []db.Sample {
+	m := make(map[uint]db.Sample)
 	for _, x := range spls {
 		m[x.ID] = x
 	}
-	var cleaned []models.Sample
+	var cleaned []db.Sample
 	for _, v := range m {
 		cleaned = append(cleaned, v)
 	}

@@ -1,0 +1,10 @@
+# Example configuration file for Siphon agent
+
+cache: true
+cert_file: "/path/to/certificate/file"
+key_file: "/path/to/key/file"
+monitor_folders:
+  - path: "/path/to/folder_1"
+    recursive: true
+  - path: "/path/to/folder_2"
+    recursive: false

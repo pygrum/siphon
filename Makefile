@@ -1,6 +1,9 @@
-.PHONY: build run
+.PHONY: build build-agent build-gen
 build:
-	docker build -t siphon .
+	go build cmd/siphon/siphon.go
 
-run:
-	docker run --rm -it siphon
+build-agent:
+	go build cmd/agent/siphon_agent.go
+
+build-gen:
+	go build cmd/generator/siphon_gen.go
