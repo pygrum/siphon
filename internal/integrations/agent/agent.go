@@ -92,6 +92,10 @@ func (f *Fetcher) BasicRequest(a *db.Agent, endpoint, query, form string) (*http
 
 func (f *Fetcher) mTLSClient(agent *db.Agent) (*http.Client, error) {
 	serverCertFile := agent.CertPath
+	// Refresh viper configuration
+	if err := viper.ReadInConfig(); err != nil {
+		return nil, err
+	}
 	certFile, keyFile := viper.GetString("cert_file"), viper.GetString("key_file")
 	// Read server certificate file and add it to trusted certificate store (certPool). Right now I'm reading my cert instead of the servers
 	caCert, err := os.ReadFile(serverCertFile)
@@ -149,7 +153,8 @@ func (f *Fetcher) Download(agent *db.Agent, sha256Hash string) (io.ReadCloser, e
 	if err != nil {
 		return nil, err
 	}
-	if resp.Header.Get("Content-Type") == "application/json" {
+	// if not application/zip, then its json, meaning request failed
+	if !strings.EqualFold(resp.Header.Get("content-type"), "application/zip") {
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return nil, err

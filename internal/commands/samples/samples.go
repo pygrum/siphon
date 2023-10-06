@@ -7,6 +7,7 @@ import (
 	"github.com/pygrum/siphon/internal/logger"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const (
@@ -71,7 +72,7 @@ func RenderTable(samples []db.Sample, v bool) {
 			s.Hash,
 			s.FileSize,
 			s.Source,
-			s.UploadTime.String(),
+			s.UploadTime.Format(time.DateTime),
 		}
 		t.AppendRow(row)
 	}

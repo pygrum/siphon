@@ -14,12 +14,12 @@ func Refresh() {
 		logger.Silentf("invalid configuration: refresh rate must be 1 minute or more")
 	}
 	ticker := time.NewTicker(time.Duration(r) * time.Minute)
-	mbFetcher := malwarebazaar.NewFetcher()
-	agFetcher := agent.NewFetcher()
 	for range ticker.C {
+		mbFetcher := malwarebazaar.NewFetcher()
 		if mbFetcher != nil {
 			go mbFetcher.GetRecent()
 		}
+		agFetcher := agent.NewFetcher()
 		go agFetcher.GetRecent()
 	}
 }

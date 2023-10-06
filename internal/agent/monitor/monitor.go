@@ -155,12 +155,13 @@ func (s *Scout) Add(file string) error {
 		Model: gorm.Model{
 			CreatedAt: fi.ModTime(),
 		},
-		Name:     filepath.Base(file),
-		Path:     file,
-		FileType: filepath.Ext(file)[1:], // Skip the leading '.'
-		FileSize: uint(fi.Size()),
-		Source:   s.Agent.ID,
-		Hash:     fileHash(file),
+		Name:       filepath.Base(file),
+		Path:       file,
+		FileType:   filepath.Ext(file)[1:], // Skip the leading '.'
+		FileSize:   uint(fi.Size()),
+		Source:     s.Agent.ID,
+		Hash:       fileHash(file),
+		UploadTime: fi.ModTime(),
 	}
 	return conn.Add(sample)
 }
